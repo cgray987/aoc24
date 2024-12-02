@@ -1,8 +1,9 @@
-def safe(report):
-	diff = report[1] - report[0]
+def safe(arr):
+	diff = arr[1] - arr[0]
 
-	for idx in range(len(report) - 1):
-		next_diff = report[idx + 1] - report[idx]
+	for idx in range(len(arr) - 1):
+		next_diff = arr[idx + 1] - arr[idx]
+		# if same value, 		diff > +-3,			changes from inc to dec
 		if (next_diff == 0 or abs(next_diff) > 3 or (next_diff > 0) != (diff > 0)):
 			return False
 		diff = next_diff
@@ -10,14 +11,16 @@ def safe(report):
 
 safe_first = 0
 safe_second = 0
-with open("day2_table.txt", "rt", encoding="utf-8") as infile:
+with open("day2/day2_table.txt", "rt", encoding="utf-8") as infile:
 	for line in infile:
 		nums = list(map(int, line.split()))
 		if safe(nums):
 			safe_first += 1
 		else:
 			for i in range(len(nums)):
-				new_nums = nums[:i] + nums[i + 1 :] # make a new list with one element removed
+				# make a new list with one element removed
+				new_nums = nums[:i] + nums[i + 1 :]
+				# if this list works, +1 safe, go to next line
 				if (safe(new_nums)):
 					safe_second += 1
 					break

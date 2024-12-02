@@ -1,30 +1,23 @@
-import re
+pairs = []
 
-infile = open("day1_table.txt", "rt")
-contents = infile.read()
+# read file into list of pairs
+with open("day1/day1_table.txt", "rt") as infile:
+	for line in infile:
+		pairs.append(list(map(int, line.split())))
 
-pairs = re.findall(r'(\d+)\s+(\d+)', contents)
+# get left and right elements
+left = [int(pair[0]) for pair in pairs]
+right = [int(pair[1]) for pair in pairs]
 
-first_set = [int(pair[0]) for pair in pairs]
-second_set = [int(pair[1]) for pair in pairs]
+left.sort()
+right.sort()
 
-first_set.sort()
-second_set.sort()
+# after sorting, dist between the two values
+distance = [abs(left - right) for left, right in zip(left, right)]
 
-distance = [abs(first - second) for first, second in zip(first_set, second_set)]
+# number of times left appears in right, multiplied by itself
+similar = [first * right.count(first) for first in left]
 
-similar = [first * second_set.count(first) for first in first_set]
-
-
-
-for i in range(len(first_set)):
-	print(first_set[i], ",", end="")
-	print(second_set[i], " = ",end="")
-	print(distance[i], " sim: ", end="")
-	print(similar[i])
-
-# print(distance)
-
-print(sum(distance))
-print(sum(similar))
+print(f'part 1: {sum(distance)}')
+print(f'part 2: {sum(similar)}')
 
