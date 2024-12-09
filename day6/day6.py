@@ -2,7 +2,7 @@ import numpy as np
 
 
 with open("day6/input.txt", "rt") as infile:
-	map = [l.strip() for l in infile.readlines()]
+	map = [list(l.strip()) for l in infile.readlines()]
 
 start = None
 for x, line in enumerate(map):
@@ -50,9 +50,41 @@ while inside and not in_loop:
 	in_loop = (pos, d) in loop_detect
 	inside = bounds(map, pos)
 
-# print(walked)
+marked_map = [row[:] for row in map]
+
+for x, y in walked:
+    marked_map[x][y] = 'x'
+
+# Print the marked map
+# for line in marked_map:
+#     print("".join(line))
+
 print(f'part 1: {len(walked)}')
 
+def check_infinite_loop(map, start, new_obstacle_pos):
+    map[new_obstacle_pos[0]][new_obstacle_pos[1]] = "#"
+    pos = start
+    d = dirs[0]
+    loop_i = 0
+    walked = set()
+    loop_detect = set()
+    inside = True
+    in_loop = False
 
-# for row in enumerate(map):
-# 	for col in enumerate(line):
+    while inside and not in_loop:
+        walked.add(pos)
+        loop_detect.add((pos, d))
+        pos, d, loop_i = move(map, pos, d, loop_i)
+
+        in_loop = (pos, d) in loop_detect
+        inside = bounds(map, pos)
+
+    map[new_obstacle_pos[0]][new_obstacle_pos[1]] = "."
+    return in_loop
+
+sum =0 
+for new_obs_pos in walked:
+	if (check_infinite_loop(map, start, new_obs_pos)):
+		sum += 1
+
+print(f"part 2: {sum}")
